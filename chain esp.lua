@@ -237,7 +237,6 @@ end
 
 ESP.instances = {}
 ESP.inAi = {}
-ESP.renderStep = nil
 ESP.connections = Bin.new()
 
 ESP.connections:add(AIFolder.ChildAdded:Connect(function(instance)
