@@ -16,6 +16,13 @@ local Workspace = game:GetService("Workspace")
 	* The libraries isnt mine, like Bin
 	* It tracks connections, instances, functions, threads, and objects to be later destroyed.
 ]]
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+--[[
+	* The libraries isnt mine, like Bin
+	* It tracks connections, instances, functions, threads, and objects to be later destroyed.
+]]
 local Bin
 do
 	Bin = setmetatable({}, {
@@ -87,11 +94,27 @@ local ScreenGui = Instance.new("ScreenGui")
 ]]
 
 function format(num)
-    local formatted = string.format("%.2f", math.floor(num*100)/100)
-    if string.find(formatted, ".00") then
-        return string.sub(formatted, 1, -4)
-    end
+    local formatted = string.format("%.1f", num)
     return formatted
+end
+
+function blackfunction(...)
+    return ...
+end
+
+--[[
+    ----------------
+    Custom Functions
+    ----------------
+    All the custom functions that are used through the code for compability
+]]
+
+
+local cloneref = cloneref or blackfunction
+
+local function SafeGetService(service)
+    return cloneref(service)
+    
 end
 
 --[[
@@ -180,6 +203,13 @@ do
         container.Parent = ScreenGui
         bin:add(container)
     end
+    function ESP:setVisible(visible)
+        local _binding = self
+        local labels = _binding.labels
+        local _binding_1 = labels
+        local container = _binding_1.container
+        container.Visible = visible
+    end
     function ESP:update()
         local _binding_1 = self
         local labels = _binding_1.labels
@@ -206,18 +236,17 @@ do
         local name = _binding.name
         local data = _binding.data
     
-        if camera and instance and instance.HumanoidRootPart then
+        if camera and instance and instance:FindFirstChild('HumanoidRootPart') then
             local position, visible = camera:WorldToViewportPoint(instance.HumanoidRootPart.Position)
             
-            if visible then
+            if visible and LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
                 local scale = 1 / (position.Z * math.tan(math.rad(camera.FieldOfView * 0.5)) * 2) * 1000
                 local width, height = math.floor(4.5 * scale), math.floor(6 * scale)
                 local x, y = math.floor(position.X), math.floor(position.Y)
                 local xPosition, yPosition = math.floor(x - width * 0.5), math.floor((y - height * 0.5) + (0.5 * scale))
                 local vector2 = Vector2.new(xPosition, yPosition)
-                if instance.GetAttributes then
-                    attributes = instance:GetAttributes()
-                end
+                
+                attributes = instance:GetAttributes()
     
                 local _valueExisted = container.Visible == false
                 container.Visible = true
@@ -231,16 +260,19 @@ do
                 local _valueExisted_1 = container.Visible == true
                 container.Visible = false
             end
+        else
+            self:destroy()
         end
     end
 end
 
 ESP.instances = {}
 ESP.inAi = {}
+ESP.renderStepped = nil
 ESP.connections = Bin.new()
 
 ESP.connections:add(AIFolder.ChildAdded:Connect(function(instance)
-    if instance:IsA("Model") and instance:FindFirstChild("Humanoid") then
+    if instance:IsA("Model") and instance:FindFirstChild("HumanoidRootPart") then
         local esp = ESP.new(instance)
         ESP.inAi[instance] = esp
     end
@@ -254,12 +286,11 @@ ESP.connections:add(AIFolder.ChildRemoved:Connect(function(instance)
     end
 end))
 
-ESP.connections:add(RunService.RenderStepped:Connect(function()
+ESP.renderStepped = RunService.RenderStepped:Connect(function()
     for _, esp in pairs(ESP.instances) do
         esp:render()
     end
-end))
-
+end)
 for _, _n in pairs(AIFolder:GetChildren()) do
     if _n:FindFirstChild("Humanoid") then
         local suc, res = pcall(function()
@@ -274,4 +305,5 @@ end
 
 ScreenGui.DisplayOrder = 10
 ScreenGui.IgnoreGuiInset = true
-ScreenGui.Parent = game.CoreGui
+ScreenGui.Parent = SafeGetService(game:GetService('CoreGui'))
+return 0
