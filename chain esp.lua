@@ -1,21 +1,3 @@
---[[
-	English: I have this open sourced because i dont wanna be that guy that gatekeeps esp source codes like its unpatchable
-	-- these translation are from ChatGPT, just to make people understand from other countries
-	Spanish: Tengo esto en código abierto porque no quiero ser ese tipo que acapara los códigos de fuente de ESP como si no pudieran ser parcheados
-	Russia: Я сделал это открытым исходным кодом, потому что не хочу быть тем человеком, который монополизирует исходные коды ESP, как будто их нельзя исправить
-	Vietnam: Tôi đã mở mã nguồn này ra vì tôi không muốn trở thành người giữ thông tin mã nguồn ESP như thể nó không thể được vá lỗi
-	Filipino (Tagalog): "Binuksan ko ang source code na ito dahil ayaw kong maging 'yong taong nagmamay-ari ng mga ESP source codes na parang hindi ito maaring ma-patch."
-	Cebuano: "Gibukas ko kini nga open-source tungod kay dili ko gusto nga mahimong tawo nga nagtago sa mga ESP source codes nga daw dili mahimong ma-patch."
-	Ilokano: "Inbuklatak daytoy a taudan ti kodigo gapu ta saanak nga kaykayatan nga agballigi iti mga ESP nga source codes a kasla saan a mabalin nga ma-patch."
-]]
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
---[[
-	* The libraries isnt mine, like Bin
-	* It tracks connections, instances, functions, threads, and objects to be later destroyed.
-]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -203,13 +185,6 @@ do
         container.Parent = ScreenGui
         bin:add(container)
     end
-    function ESP:setVisible(visible)
-        local _binding = self
-        local labels = _binding.labels
-        local _binding_1 = labels
-        local container = _binding_1.container
-        container.Visible = visible
-    end
     function ESP:update()
         local _binding_1 = self
         local labels = _binding_1.labels
@@ -268,7 +243,6 @@ end
 
 ESP.instances = {}
 ESP.inAi = {}
-ESP.renderStepped = nil
 ESP.connections = Bin.new()
 
 ESP.connections:add(AIFolder.ChildAdded:Connect(function(instance)
@@ -286,11 +260,12 @@ ESP.connections:add(AIFolder.ChildRemoved:Connect(function(instance)
     end
 end))
 
-ESP.renderStepped = RunService.RenderStepped:Connect(function()
+ESP.connections:add(RunService.RenderStepped:Connect(function()
     for _, esp in pairs(ESP.instances) do
         esp:render()
     end
-end)
+end))
+
 for _, _n in pairs(AIFolder:GetChildren()) do
     if _n:FindFirstChild("Humanoid") then
         local suc, res = pcall(function()
