@@ -1,14 +1,3 @@
---[[
-	English: I have this open sourced because i dont wanna be that guy that gatekeeps esp source codes like its unpatchable
-	-- these translation are from ChatGPT, just to make people understand from other countries
-	Spanish: Tengo esto en código abierto porque no quiero ser ese tipo que acapara los códigos de fuente de ESP como si no pudieran ser parcheados
-	Russia: Я сделал это открытым исходным кодом, потому что не хочу быть тем человеком, который монополизирует исходные коды ESP, как будто их нельзя исправить
-	Vietnam: Tôi đã mở mã nguồn này ra vì tôi không muốn trở thành người giữ thông tin mã nguồn ESP như thể nó không thể được vá lỗi
-	Filipino (Tagalog): "Binuksan ko ang source code na ito dahil ayaw kong maging 'yong taong nagmamay-ari ng mga ESP source codes na parang hindi ito maaring ma-patch."
-	Cebuano: "Gibukas ko kini nga open-source tungod kay dili ko gusto nga mahimong tawo nga nagtago sa mga ESP source codes nga daw dili mahimong ma-patch."
-	Ilokano: "Inbuklatak daytoy a taudan ti kodigo gapu ta saanak nga kaykayatan nga agballigi iti mga ESP nga source codes a kasla saan a mabalin nga ma-patch."
-]]
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -180,7 +169,7 @@ do
 		name.TextSize = 15
 		name.TextStrokeTransparency = 0.5
 		name.Size = UDim2.new(1, 0, 0, 14)
-		container.Size = UDim2.new(0, 300, 0, name.TextBounds.Y)
+		container.Size = UDim2.new(0, 100, 0, 50)
 		-- Initialization:
 		name.Parent = container
 		container.Parent = ScreenGui
@@ -237,4 +226,10 @@ end
 ScreenGui.DisplayOrder = 10
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.Parent = SafeGetService(game:GetService('CoreGui'))
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Im very sorry for the Scraps ESP not working!";
+	Text = "its fixed now! dm mando_mercury for issues";
+	Duration = 5;
+});
 return 0
