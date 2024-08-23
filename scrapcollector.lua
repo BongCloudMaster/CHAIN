@@ -20,9 +20,9 @@ do
 			_result:PivotTo(cframe)
 		end
 	end
-	local collect = function(scrap, values)
+	local collect = function(scrap)
 		scrapCounter += 1
-		print(`Processing scrap {scrapCounter}`)
+		print(`Processing scrap: {scrapCounter}`)
 		local pivotCFrame = scrap:GetPivot()
 		local proximityPrompt = scrap:FindFirstChildWhichIsA("ProximityPrompt", true)
 		if proximityPrompt ~= nil then
@@ -41,8 +41,8 @@ do
 			local values = scraps:WaitForChild("Values")
 			if scraps:GetAttribute("Scrap") ~= nil and scraps:IsA("Model") and values:GetAttribute("Available") == true then
 				bringPlr(scraps:GetPivot())
-				print("Brought players to scrap")
-				collect(scraps, values)
+				print(`Brought {LocalPlayer.Name} to scrap`)
+				collect(scraps)
 			end
 			task.wait(0.2)
 		end
