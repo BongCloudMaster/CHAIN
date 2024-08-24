@@ -22,15 +22,15 @@ do
 	end
 	local collect = function(scrap)
 		scrapCounter += 1
-		print(`Processing scrap: {scrapCounter}`)
+		--print(`Processing scrap: {scrapCounter}`)
 		local pivotCFrame = scrap:GetPivot()
 		local proximityPrompt = scrap:FindFirstChildWhichIsA("ProximityPrompt", true)
 		if proximityPrompt ~= nil then
 			task.wait(0.4)
-			print("Looking at scrap...")
+			--print("Looking at scrap...")
 			lookAt(pivotCFrame)
 			task.wait(0.2)
-			print("Fired the scraps prompt")
+			--print("Fired the scraps prompt")
 			fireproximityprompt(proximityPrompt)
 		else
 			print(`Skipped scrap: {scrapCounter}`)
@@ -41,7 +41,7 @@ do
 			local values = scraps:WaitForChild("Values")
 			if scraps:GetAttribute("Scrap") ~= nil and scraps:IsA("Model") and values:GetAttribute("Available") == true then
 				bringPlr(scraps:GetPivot())
-				print(`Brought {LocalPlayer.Name} to scrap`)
+				--print(`Brought {LocalPlayer.Name} to scrap`)
 				collect(scraps)
 			end
 			task.wait(0.2)
