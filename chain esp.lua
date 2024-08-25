@@ -185,6 +185,13 @@ do
         container.Parent = ScreenGui
         bin:add(container)
     end
+    function ESP:setVisible(visible)
+        local _binding = self
+        local labels = _binding.labels
+        local _binding_1 = labels
+        local container = _binding_1.container
+        container.Visible = visible
+    end
     function ESP:update()
         local _binding_1 = self
         local labels = _binding_1.labels
@@ -211,55 +218,43 @@ do
         local name = _binding.name
         local data = _binding.data
     
-        if camera and instance and instance:FindFirstChild('HumanoidRootPart') then
-            local position, visible = camera:WorldToViewportPoint(instance.HumanoidRootPart.Position)
+        local position, visible = camera:WorldToViewportPoint(instance.HumanoidRootPart.Position)
             
             if visible and LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
-                local scale = 1 / (position.Z * math.tan(math.rad(camera.FieldOfView * 0.5)) * 2) * 1000
-                local width, height = math.floor(4.5 * scale), math.floor(6 * scale)
-                local x, y = math.floor(position.X), math.floor(position.Y)
-                local xPosition, yPosition = math.floor(x - width * 0.5), math.floor((y - height * 0.5) + (0.5 * scale))
-                local vector2 = Vector2.new(xPosition, yPosition)
+            local scale = 1 / (position.Z * math.tan(math.rad(camera.FieldOfView * 0.5)) * 2) * 1000
+            local width, height = math.floor(4.5 * scale), math.floor(6 * scale)
+            local x, y = math.floor(position.X), math.floor(position.Y)
+            local xPosition, yPosition = math.floor(x - width * 0.5), math.floor((y - height * 0.5) + (0.5 * scale))
+            local vector2 = Vector2.new(xPosition, yPosition)
                 
-                attributes = instance:GetAttributes()
+            attributes = instance:GetAttributes()
     
-                local _valueExisted = container.Visible == false
-                container.Visible = true
-                name.Text = instance.Name
+            local _valueExisted = container.Visible == false
+            container.Visible = true
+            name.Text = instance.Name
                 
-                local positionDiff = LocalPlayer.Character.HumanoidRootPart.Position - instance.HumanoidRootPart.Position
-                data.Text = `[{format(positionDiff.Magnitude)}] [Anger: {format(attributes.Anger)}] [Choke : {format(attributes.ChokeMeter)}%] [Deflect : {format(attributes.DeflectChance)}]`
+            local positionDiff = LocalPlayer.Character.HumanoidRootPart.Position - instance.HumanoidRootPart.Position
+            data.Text = `[{format(positionDiff.Magnitude)}] [Anger: {format(attributes.Anger)}] [Choke : {format(attributes.ChokeMeter)}%] [Deflect : {format(attributes.DeflectChance)}]`
     
-                container.Position = UDim2.new(0, vector2.X, 0, vector2.Y + 3)
-            else
-                local _valueExisted_1 = container.Visible == true
-                container.Visible = false
-            end
+            container.Position = UDim2.new(0, vector2.X, 0, vector2.Y + 3)
         else
-            self:destroy()
+            local _valueExisted_1 = container.Visible == true
+            container.Visible = false
         end
     end
 end
 
 ESP.instances = {}
-ESP.inAi = {}
 ESP.connections = Bin.new()
 
 ESP.connections:add(AIFolder.ChildAdded:Connect(function(instance)
-    if instance:IsA("Model") and instance:FindFirstChild("HumanoidRootPart") then
-        local esp = ESP.new(instance)
-        ESP.inAi[instance] = esp
-    end
+	task.spawn(function()
+        repeat wait() until instance:FindFirstChild("HumanoidRootPart")
+        if instance:IsA("Model") and instance:FindFirstChild("HumanoidRootPart") then
+            ESP.new(instance)
+        end
+    end)
 end))
-
-
-ESP.connections:add(AIFolder.ChildRemoved:Connect(function(instance)
-    if ESP.inAi[instance] then
-        ESP.inAi[instance]:destroy()
-        ESP.inAi[instance] = nil
-    end
-end))
-
 ESP.connections:add(RunService.RenderStepped:Connect(function()
     for _, esp in pairs(ESP.instances) do
         esp:render()
@@ -269,8 +264,7 @@ end))
 for _, _n in pairs(AIFolder:GetChildren()) do
     if _n:FindFirstChild("Humanoid") then
         local suc, res = pcall(function()
-            local esp = ESP.new(_n)
-            ESP.inAi[_n] = esp
+            ESP.new(_n)
         end)
         if not suc then
             warn(res)
