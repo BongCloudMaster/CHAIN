@@ -234,7 +234,7 @@ do
             name.Text = instance.Name
                 
             local positionDiff = LocalPlayer.Character.HumanoidRootPart.Position - instance.HumanoidRootPart.Position
-            data.Text = `[{format(positionDiff.Magnitude)}] [Anger: {format(attributes.Anger)}] [Choke : {format(attributes.ChokeMeter)}%] [Deflect : {format(attributes.DeflectChance)}]`
+            data.Text = `[{format(positionDiff.Magnitude)}] [Anger: {format(attributes.Anger)}] [Choke : {format(attributes.ChokeMeter)}%] [Ground Slam : {format(attributes.Burst)}]`
     
             container.Position = UDim2.new(0, vector2.X, 0, vector2.Y + 3)
         else
